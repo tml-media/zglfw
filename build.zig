@@ -11,8 +11,9 @@ pub fn build(b: *std.Build) void {
     });
     lib.linkLibC();
 
-    const built_glfw = b.dependency("glfw", .{});
-    lib.linkLibrary(built_glfw.artifact("glfw"));
+    if (b.lazyDependency("glfw", .{})) |dep| {
+        lib.linkLibrary(dep.artifact("glfw"));
+    }
 
     b.installArtifact(lib);
 
