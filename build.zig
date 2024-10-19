@@ -3,6 +3,7 @@ const std = @import("std");
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+
     const lib = b.addStaticLibrary(.{
         .name = "zglfw",
         .root_source_file = b.path("src/glfw.zig"),
@@ -11,7 +12,10 @@ pub fn build(b: *std.Build) void {
     });
     lib.linkLibC();
 
-    if (b.lazyDependency("glfw", .{})) |dep| {
+    if (b.lazyDependency("glfw", .{
+        .target = target,
+        .optimize = optimize,
+    })) |dep| {
         lib.linkLibrary(dep.artifact("glfw"));
     }
 
