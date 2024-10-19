@@ -10,7 +10,10 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     lib.linkLibC();
-    lib.linkSystemLibrary("glfw");
+
+    const built_glfw = b.dependency("glfw", .{});
+    lib.linkLibrary(built_glfw.artifact("glfw"));
+
     b.installArtifact(lib);
 
     const exe = b.addExecutable(.{
